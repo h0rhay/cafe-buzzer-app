@@ -138,7 +138,7 @@ export const DebugMenu: React.FC<DebugMenuProps> = ({ onClose }) => {
         {activeTab === 'info' && (
           <div className="space-y-2 text-xs">
             <div><strong>URL:</strong> {window.location.href}</div>
-            <div><strong>Supabase URL:</strong> {import.meta.env.VITE_SUPABASE_URL || 'https://qbczhoqekmpbfbakqgyj.supabase.co'}</div>
+            <div><strong>Supabase URL:</strong> {import.meta.env.VITE_SUPABASE_URL || 'Not configured'}</div>
             <div><strong>User Agent:</strong> {navigator.userAgent.substring(0, 50)}...</div>
             <div><strong>Local Storage:</strong> {Object.keys(localStorage).length} items</div>
           </div>

@@ -6,11 +6,15 @@
   publish = "dist"
   
   # Default build command
-  command = "npm run build"
+  command = "npm ci && npm run build"
 
 [build.environment]
   # Node.js version to use
   NODE_VERSION = "18"
+  # Ensure npm uses exact versions
+  NPM_FLAGS = "--production=false"
+  # Disable secrets scanning for expected public Supabase values
+  SECRETS_SCAN_OMIT_KEYS = "VITE_SUPABASE_URL,VITE_SUPABASE_ANON_KEY"
 
 # Redirect all routes to index.html for SPA routing
 [[redirects]]
