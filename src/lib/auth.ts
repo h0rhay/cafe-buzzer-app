@@ -7,7 +7,53 @@ export interface AuthUser {
   created_at: string
 }
 
+export async function signUpWithEmail(email: string, password: string): Promise<AuthUser> {
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      emailRedirectTo: `${window.location.origin}/auth/callback`
+    }
+  })
+  
+  if (error) {
+    throw new Error(`Failed to sign up: ${error.message}`)
+  }
+  
+  if (!data.user) {
+    throw new Error('No user returned from sign up')
+  }
+  
+  return {
+    id: data.user.id,
+    email: data.user.email || undefined,
+    created_at: data.user.created_at,
+  }
+}
+
+export async function signInWithEmail(email: string, password: string): Promise<AuthUser> {
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  })
+  
+  if (error) {
+    throw new Error(`Failed to sign in: ${error.message}`)
+  }
+  
+  if (!data.user) {
+    throw new Error('No user returned from sign in')
+  }
+  
+  return {
+    id: data.user.id,
+    email: data.user.email || undefined,
+    created_at: data.user.created_at,
+  }
+}
+
 export async function signInAnonymously(): Promise<AuthUser> {
+  // Keep for demo purposes, but discourage use
   const { data, error } = await supabase.auth.signInAnonymously()
   
   if (error) {

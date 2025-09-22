@@ -6,22 +6,22 @@ export function LandingPage() {
       <div className="container mx-auto px-4 py-16">
         <div className="text-center mb-16">
           <h1 className="text-5xl font-bold text-gray-900 mb-6">
-            Replace Physical Pagers with Smart Buzzers
+            Smart Buzzer System for Cafes
           </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            Modern cafe buzzer system that works on any smartphone. No hardware needed - 
-            just show a QR code and your customers get real-time notifications when their order is ready.
+          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+            QR code-based order notifications that work on any smartphone. 
+            No hardware needed.
           </p>
           <div className="flex gap-4 justify-center">
             <Link
               to="/app"
-              className="inline-block bg-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors"
+              className="inline-block bg-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors shadow-sm"
             >
-              Get Started Free
+              Sign Up
             </Link>
             <Link
               to="/demo"
-              className="inline-block bg-gray-100 text-gray-700 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-200 transition-colors"
+              className="inline-block bg-white text-gray-700 border-2 border-gray-300 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-50 transition-colors"
             >
               Try Demo
             </Link>
@@ -89,16 +89,21 @@ export function LandingPage() {
         </div>
 
         <div className="text-center">
-          <h2 className="text-3xl font-bold mb-6">Ready to Modernize Your Cafe?</h2>
-          <p className="text-lg text-gray-600 mb-8">
-            Join cafes already using smart buzzers to improve customer experience
-          </p>
-          <Link
-            to="/app"
-            className="inline-block bg-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors"
-          >
-            Start Your Free Trial
-          </Link>
+          <h2 className="text-3xl font-bold mb-6">Ready to Get Started?</h2>
+          <div className="flex gap-4 justify-center">
+            <Link
+              to="/app"
+              className="inline-block bg-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors shadow-sm"
+            >
+              Sign Up
+            </Link>
+            <Link
+              to="/demo"
+              className="inline-block bg-white text-gray-700 border-2 border-gray-300 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-50 transition-colors"
+            >
+              Try Demo
+            </Link>
+          </div>
         </div>
       </div>
     </div>

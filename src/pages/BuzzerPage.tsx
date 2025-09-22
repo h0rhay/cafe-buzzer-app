@@ -1,117 +1,90 @@
 import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { getBuzzerByToken, type BuzzerWithMenuItems } from "../lib/api/buzzers";
-import { CountdownTimer } from "./CountdownTimer";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import { getBuzzerByToken, type BuzzerWithMenuItems, type BuzzerStatus } from "../lib/api/buzzers";
+import { CountdownTimer } from "../components/CountdownTimer";
+
+// Status color and icon mapping for consistent UI
+const STATUS_CONFIG = {
+  active: { color: "bg-blue-500", icon: "👨‍🍳" },
+  ready: { color: "bg-green-500", icon: "✅" },
+  picked_up: { color: "bg-gray-500", icon: "📦" },
+  canceled: { color: "bg-red-500", icon: "❌" },
+  expired: { color: "bg-gray-500", icon: "⏰" }
+} as const;
 
 export function BuzzerPage() {
-  const { token } = useParams<{ token: string }>();
+  const { token, businessSlug } = useParams<{ token: string; businessSlug?: string }>();
   const [buzzer, setBuzzer] = useState<BuzzerWithMenuItems | null | undefined>(undefined);
 
-  useEffect(() => {
+  const fetchBuzzer = useCallback(async () => {
     if (!token) return;
-
-    const fetchBuzzer = async () => {
-      try {
-        const data = await getBuzzerByToken(token);
-        
-        setBuzzer((prevBuzzer) => {
-          // Debug log when ETA or timer visibility changes
-          if (prevBuzzer && data) {
-            if (prevBuzzer.eta !== data.eta) {
-              console.log('📡 Buzzer page received ETA update:', {
-                old: prevBuzzer.eta + 'min',
-                new: data.eta + 'min',
-                status: data.status
-              });
-            }
-            if (prevBuzzer.showTimers !== data.showTimers) {
-              console.log('🎛️ Timer visibility changed:', {
-                from: prevBuzzer.showTimers,
-                to: data.showTimers
-              });
-            }
+    
+    try {
+      const data = await getBuzzerByToken(token);
+      
+      setBuzzer((prevBuzzer) => {
+        // Debug log when ETA or timer visibility changes
+        if (prevBuzzer && data) {
+          if (prevBuzzer.eta !== data.eta) {
+            console.log('📡 Buzzer page received ETA update:', {
+              old: prevBuzzer.eta + 'min',
+              new: data.eta + 'min',
+              status: data.status
+            });
           }
-          return data;
-        });
-      } catch (error) {
-        console.error('Failed to fetch buzzer:', error);
-        setBuzzer(null);
-      }
-    };
+          if (prevBuzzer.showTimers !== data.showTimers) {
+            console.log('🎛️ Timer visibility changed:', {
+              from: prevBuzzer.showTimers,
+              to: data.showTimers
+            });
+          }
+        }
+        return data;
+      });
+    } catch (error) {
+      console.error('Failed to fetch buzzer:', error);
+      setBuzzer(null);
+    }
+  }, [token]);
 
-    fetchBuzzer().catch((error) => {
-      console.error('Initial buzzer fetch failed:', error);
-    });
+  useEffect(() => {
+    fetchBuzzer();
     
     // Poll for updates every 5 seconds to catch status changes quickly
-    const interval = setInterval(() => {
-      fetchBuzzer().catch((error) => {
-        console.error('Periodic buzzer fetch failed:', error);
-      });
-    }, 5000);
+    const interval = setInterval(fetchBuzzer, 5000);
     
     return () => {
       clearInterval(interval);
     };
-  }, [token]);
+  }, [fetchBuzzer]);
 
 
-  const getStatusColor = () => {
-    if (!buzzer) return "bg-gray-500";
-    
-    switch (buzzer.status) {
-      case "ready":
-        return "bg-green-500";
-      case "active":
-        return "bg-blue-500";
-      case "picked_up":
-        return "bg-gray-500";
-      case "canceled":
-        return "bg-red-500";
-      case "expired":
-        return "bg-gray-500";
-      default:
-        return "bg-gray-500";
+  // Memoized status information for better performance
+  const statusInfo = useMemo(() => {
+    if (!buzzer) {
+      return {
+        color: "bg-gray-500",
+        text: "Loading...",
+        icon: "⏳"
+      };
     }
-  };
 
-  const getStatusText = () => {
-    if (!buzzer) return "Loading...";
+    const config = STATUS_CONFIG[buzzer.status] || STATUS_CONFIG.active;
     
-    switch (buzzer.status) {
-      case "ready":
-        return "Ready for Pickup!";
-      case "active":
-        return "Being Prepared";
-      case "picked_up":
-        return "Picked Up";
-      case "canceled":
-        return "Canceled";
-      case "expired":
-        return "Expired";
-      default:
-        return "Unknown Status";
-    }
-  };
+    const statusTexts: Record<BuzzerStatus, string> = {
+      ready: "Ready for Pickup!",
+      active: "Being Prepared", 
+      picked_up: "Picked Up",
+      canceled: "Canceled",
+      expired: "Expired"
+    };
 
-  const getStatusIcon = () => {
-    if (!buzzer) return "⏳";
-    
-    switch (buzzer.status) {
-      case "ready":
-        return "✅";
-      case "active":
-        return "👨‍🍳";
-      case "picked_up":
-        return "📦";
-      case "canceled":
-        return "❌";
-      case "expired":
-        return "⏰";
-      default:
-        return "❓";
-    }
-  };
+    return {
+      color: config.color,
+      text: statusTexts[buzzer.status] || "Unknown Status",
+      icon: config.icon
+    };
+  }, [buzzer]);
 
 
   if (buzzer === undefined) {
@@ -148,10 +121,10 @@ export function BuzzerPage() {
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="max-w-md w-full bg-white rounded-lg shadow-lg border overflow-hidden">
         {/* Status Header */}
-        <div className={`${getStatusColor()} text-white p-6 text-center`}>
-          <div className="text-6xl mb-2">{getStatusIcon()}</div>
+        <div className={`${statusInfo.color} text-white p-6 text-center`}>
+          <div className="text-6xl mb-2">{statusInfo.icon}</div>
           <h1 className="text-2xl font-bold mb-1">
-            {getStatusText()}
+            {statusInfo.text}
           </h1>
           {buzzer.businessName && (
             <p className="text-white/80">

@@ -1,5 +1,5 @@
 "use client";
-import { signOut } from "./lib/auth";
+import { signOut } from "../lib/auth";
 import { toast } from "sonner";
 
 export function SignOutButton() {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 export function useDebug() {
   const [isDebugMode, setIsDebugMode] = useState(false);
@@ -24,26 +24,26 @@ export function useDebug() {
     return () => window.removeEventListener('popstate', checkDebugMode);
   }, []);
 
-  const debugLog = (message: string, data?: any) => {
+  const debugLog = useCallback((message: string, data?: any) => {
     if (isDebugMode) {
       console.log(`🐛 ${message}`, data || '');
     }
-  };
+  }, [isDebugMode]);
 
-  const debugError = (message: string, error?: any) => {
+  const debugError = useCallback((message: string, error?: any) => {
     if (isDebugMode) {
       console.error(`🐛 ERROR: ${message}`, error || '');
     }
-  };
+  }, [isDebugMode]);
 
-  const debugApi = (method: string, url: string, data?: any, response?: any) => {
+  const debugApi = useCallback((method: string, url: string, data?: any, response?: any) => {
     if (isDebugMode) {
       console.group(`🐛 API ${method.toUpperCase()} ${url}`);
       if (data) console.log('Request data:', data);
       if (response) console.log('Response:', response);
       console.groupEnd();
     }
-  };
+  }, [isDebugMode]);
 
   return {
     isDebugMode,

@@ -3,13 +3,16 @@ import QRCode from "qrcode";
 
 interface Props {
   token: string;
+  businessSlug?: string;
   onClose: () => void;
 }
 
-export function QRCodeModal({ token, onClose }: Props) {
+export function QRCodeModal({ token, businessSlug, onClose }: Props) {
   const modalRef = useRef<HTMLDivElement>(null);
   const [qrCodeUrl, setQrCodeUrl] = useState<string>("");
-  const url = `${window.location.origin}/b/${token}`;
+  const url = businessSlug 
+    ? `${window.location.origin}/${businessSlug}/b/${token}`
+    : `${window.location.origin}/b/${token}`;
 
   useEffect(() => {
     const generateQR = async () => {

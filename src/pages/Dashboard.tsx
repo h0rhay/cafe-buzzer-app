@@ -1,11 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { supabase } from "../lib/supabase";
 import { useDebug } from "../hooks/useDebug";
 import type { BuzzerWithMenuItems } from "../lib/api/buzzers";
-import { QRCodeModal } from "./QRCodeModal";
-import { CountdownTimer } from "./CountdownTimer";
+import { QRCodeModal } from "../components/QRCodeModal";
+import { CountdownTimer } from "../components/CountdownTimer";
+import type { Business } from "../lib/api/businesses";
 
 // Generate a random token for public access
 function generateToken(): string {
@@ -14,7 +15,15 @@ function generateToken(): string {
 }
 
 interface DashboardProps {
-  business?: { id: string; name: string } | null;
+  business?: Pick<Business, 'id' | 'name' | 'slug'> | null;
+}
+
+interface DashboardBusiness {
+  id: string;
+  name: string;
+  slug: string;
+  default_eta: number;
+  show_timers: boolean;
 }
 
 export function Dashboard({ business: propBusiness }: DashboardProps = {}) {
@@ -22,22 +31,10 @@ export function Dashboard({ business: propBusiness }: DashboardProps = {}) {
   const [loading, setLoading] = useState(true);
   const [showQRModal, setShowQRModal] = useState(false);
   const [selectedBuzzerToken, setSelectedBuzzerToken] = useState<string | null>(null);
-  const [business, setBusiness] = useState<any>(null);
+  const [business, setBusiness] = useState<DashboardBusiness | null>(null);
   const { debugLog, debugError } = useDebug();
 
-  useEffect(() => {
-    fetchDemoBuzzers();
-    fetchBusinessSettings();
-    
-    // Refresh every 10 seconds for demo
-    const interval = setInterval(fetchDemoBuzzers, 10000);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, [propBusiness?.id]); // Re-fetch when business changes
-
-  const fetchBusinessSettings = async () => {
+  const fetchBusinessSettings = useCallback(async () => {
     try {
       const businessId = propBusiness?.id || '10000000-0000-0000-0000-000000000001';
       const { data, error } = await supabase
@@ -52,9 +49,9 @@ export function Dashboard({ business: propBusiness }: DashboardProps = {}) {
     } catch (error) {
       debugError('Failed to fetch business settings:', error);
     }
-  };
+  }, [propBusiness?.id, debugLog, debugError]);
 
-  const fetchDemoBuzzers = async () => {
+  const fetchDemoBuzzers = useCallback(async () => {
     debugLog('Fetching demo buzzers...');
     debugLog('Supabase URL:', import.meta.env.VITE_SUPABASE_URL);
     debugLog('Using supabase client URL');
@@ -108,18 +105,48 @@ export function Dashboard({ business: propBusiness }: DashboardProps = {}) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [propBusiness?.id, debugLog, debugError]);
 
-  const getTimeRemaining = (buzzer: any) => {
+  useEffect(() => {
+    void fetchDemoBuzzers();
+    void fetchBusinessSettings();
+    
+    // Refresh every 10 seconds for demo
+    const interval = setInterval(() => void fetchDemoBuzzers(), 10000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [fetchDemoBuzzers, fetchBusinessSettings]);
+
+  const getTimeRemaining = useCallback((buzzer: BuzzerWithMenuItems) => {
     const startTime = new Date(buzzer.started_at).getTime();
     const elapsed = (Date.now() - startTime) / 1000 / 60; // minutes
     const remaining = Math.max(0, buzzer.eta - elapsed);
     return Math.ceil(remaining);
-  };
+  }, []);
+
+  // Memoized calculations for performance
+  const _buzzerStats = useMemo(() => {
+    const overdueBuzzers = buzzers.filter(buzzer => {
+      const timeRemaining = getTimeRemaining(buzzer);
+      return timeRemaining <= 0 && buzzer.status === 'active';
+    });
+    
+    const activeBuzzers = buzzers.filter(buzzer => buzzer.status === 'active');
+    const readyBuzzers = buzzers.filter(buzzer => buzzer.status === 'ready');
+    
+    return {
+      overdue: overdueBuzzers.length,
+      active: activeBuzzers.length,
+      ready: readyBuzzers.length,
+      total: buzzers.length
+    };
+  }, [buzzers, getTimeRemaining]);
 
 
   // Auto-ready callback for countdown timer
-  const handleTimerExpired = async (buzzerId: string) => {
+  const handleTimerExpired = useCallback(async (buzzerId: string) => {
     try {
       debugLog('Timer expired, marking buzzer as ready:', buzzerId);
       await supabase
@@ -136,13 +163,13 @@ export function Dashboard({ business: propBusiness }: DashboardProps = {}) {
         toast.success(`🎉 Order ${expiredBuzzer.ticket} is ready!`);
       }
       
-      fetchDemoBuzzers();
+      void fetchDemoBuzzers();
     } catch (error) {
       debugError('Failed to auto-transition buzzer on timer expiry:', error);
     }
-  };
+  }, [buzzers, debugLog, debugError, fetchDemoBuzzers]);
 
-  const handleMarkReady = async (buzzer: BuzzerWithMenuItems) => {
+  const handleMarkReady = useCallback(async (buzzer: BuzzerWithMenuItems) => {
     try {
       debugLog('Manually marking buzzer as ready:', buzzer.id);
       
@@ -161,16 +188,16 @@ export function Dashboard({ business: propBusiness }: DashboardProps = {}) {
       }
       
       debugLog('Successfully marked buzzer as ready');
-      fetchDemoBuzzers();
+      void fetchDemoBuzzers();
       toast.success(`Order ${buzzer.ticket} marked as ready!`);
     } catch (error) {
       debugError('Failed to mark buzzer as ready:', error);
       console.error('Mark ready error:', error);
       toast.error(`Failed to mark order as ready: ${(error as any)?.message || 'Unknown error'}`);
     }
-  };
+  }, [debugLog, debugError, fetchDemoBuzzers]);
 
-  const handleUpdateDefaultEta = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleUpdateDefaultEta = useCallback(async (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (!business) return;
     
     try {
@@ -188,7 +215,7 @@ export function Dashboard({ business: propBusiness }: DashboardProps = {}) {
       debugError('Failed to update default ETA:', error);
       toast.error('Failed to update default wait time');
     }
-  };
+  }, [business, propBusiness?.id, debugError]);
 
   const handleToggleShowTimers = async () => {
     const businessId = propBusiness?.id || '10000000-0000-0000-0000-000000000001';
@@ -220,10 +247,11 @@ export function Dashboard({ business: propBusiness }: DashboardProps = {}) {
     }
   };
 
-  const handleShowQR = (buzzer: BuzzerWithMenuItems) => {
+  const handleShowQR = useCallback((buzzer: BuzzerWithMenuItems) => {
     setSelectedBuzzerToken(buzzer.public_token);
     setShowQRModal(true);
-  };
+  }, []);
+
 
   const handleAdjustTime = async (buzzer: BuzzerWithMenuItems, minutes: number) => {
     try {
@@ -242,7 +270,7 @@ export function Dashboard({ business: propBusiness }: DashboardProps = {}) {
       }
       
       debugLog('Successfully adjusted buzzer time');
-      fetchDemoBuzzers();
+      void fetchDemoBuzzers();
       toast.success(`Order ${buzzer.ticket} time ${minutes > 0 ? 'increased' : 'decreased'} by ${Math.abs(minutes)} minute${Math.abs(minutes) !== 1 ? 's' : ''}!`);
     } catch (error) {
       debugError('Failed to adjust buzzer time:', error);
@@ -270,7 +298,7 @@ export function Dashboard({ business: propBusiness }: DashboardProps = {}) {
       }
       
       debugLog('Successfully cancelled buzzer');
-      fetchDemoBuzzers();
+      void fetchDemoBuzzers();
       toast.success(`Order ${buzzer.ticket} cancelled`);
     } catch (error) {
       debugError('Failed to cancel buzzer:', error);
@@ -303,11 +331,12 @@ export function Dashboard({ business: propBusiness }: DashboardProps = {}) {
 
       if (error) throw error;
 
-      // Open buzzer page in new tab
-      window.open(`/b/${publicToken}`, '_blank');
+      // Open buzzer page in new tab with business slug
+      const buzzerUrl = business?.slug ? `/${business.slug}/b/${publicToken}` : `/b/${publicToken}`;
+      window.open(buzzerUrl, '_blank');
       
       // Refresh the dashboard
-      fetchDemoBuzzers();
+      void fetchDemoBuzzers();
       
       toast.success('New buzzer created! Check the new tab.');
     } catch (error) {
@@ -362,7 +391,7 @@ export function Dashboard({ business: propBusiness }: DashboardProps = {}) {
               <select
                 id="default-wait-time"
                 value={business?.default_eta || 5}
-                onChange={handleUpdateDefaultEta}
+                onChange={(e) => void handleUpdateDefaultEta(e)}
                 className="px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value={3}>3 minutes</option>
@@ -381,7 +410,7 @@ export function Dashboard({ business: propBusiness }: DashboardProps = {}) {
               </label>
               <button
                 id="show-timers"
-                onClick={handleToggleShowTimers}
+                onClick={() => void handleToggleShowTimers()}
                 className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
                   business?.show_timers ? 'bg-blue-600' : 'bg-gray-300'
                 }`}
@@ -398,7 +427,7 @@ export function Dashboard({ business: propBusiness }: DashboardProps = {}) {
             </div>
             
             <button
-              onClick={createNewBuzzer}
+              onClick={() => void createNewBuzzer()}
               className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
             >
               New Buzzer
@@ -492,7 +521,7 @@ export function Dashboard({ business: propBusiness }: DashboardProps = {}) {
                         size="small"
                         showText={true}
                         showTimers={true} // Dashboard always shows timers for staff
-                        onExpired={() => handleTimerExpired(buzzer.id)}
+                        onExpired={() => void handleTimerExpired(buzzer.id)}
                         buzzerId={buzzer.id}
                       />
                     </div>
@@ -508,25 +537,25 @@ export function Dashboard({ business: propBusiness }: DashboardProps = {}) {
                       {buzzer.status === "active" && (
                         <>
                           <button
-                            onClick={() => handleAdjustTime(buzzer, -5)}
+                            onClick={() => void handleAdjustTime(buzzer, -5)}
                             className="px-3 py-1 text-sm bg-orange-100 text-orange-700 rounded hover:bg-orange-200 transition-colors"
                           >
                             ⏰ -5 min
                           </button>
                           <button
-                            onClick={() => handleAdjustTime(buzzer, 5)}
+                            onClick={() => void handleAdjustTime(buzzer, 5)}
                             className="px-3 py-1 text-sm bg-orange-100 text-orange-700 rounded hover:bg-orange-200 transition-colors"
                           >
                             ⏰ +5 min
                           </button>
                           <button
-                            onClick={() => handleMarkReady(buzzer)}
+                            onClick={() => void handleMarkReady(buzzer)}
                             className="px-3 py-1 text-sm bg-green-100 text-green-700 rounded hover:bg-green-200 transition-colors"
                           >
                             ✅ Mark Ready
                           </button>
                           <button
-                            onClick={() => handleCancel(buzzer)}
+                            onClick={() => void handleCancel(buzzer)}
                             className="px-3 py-1 text-sm bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors"
                           >
                             ❌ Cancel
@@ -578,7 +607,8 @@ export function Dashboard({ business: propBusiness }: DashboardProps = {}) {
       {/* QR Code Modal */}
       {showQRModal && selectedBuzzerToken && (
         <QRCodeModal 
-          token={selectedBuzzerToken} 
+          token={selectedBuzzerToken}
+          businessSlug={business?.slug}
           onClose={() => {
             setShowQRModal(false);
             setSelectedBuzzerToken(null);

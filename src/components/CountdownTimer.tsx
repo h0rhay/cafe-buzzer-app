@@ -1,17 +1,21 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, memo } from "react";
+
+// Define TypeScript types for better type safety
+type BuzzerStatus = 'active' | 'ready' | 'picked_up' | 'canceled' | 'expired';
+type TimerSize = 'small' | 'medium' | 'large';
 
 interface CountdownTimerProps {
   startedAt: string;
   etaMinutes: number;
-  status: 'active' | 'ready' | 'picked_up' | 'canceled' | 'expired';
-  size?: 'small' | 'medium' | 'large';
+  status: BuzzerStatus;
+  size?: TimerSize;
   showText?: boolean;
   showTimers?: boolean; // Whether to show actual countdown (false = just status)
   onExpired?: () => void; // Callback when timer reaches zero
   buzzerId?: string; // For tracking which buzzer expired
 }
 
-export function CountdownTimer({ 
+const CountdownTimer = memo(function CountdownTimer({ 
   startedAt, 
   etaMinutes, 
   status, 
@@ -69,12 +73,12 @@ export function CountdownTimer({
     return () => clearInterval(timer);
   }, [startedAt, etaMinutes, status, hasTriggeredExpired, onExpired, buzzerId, timeRemaining]);
 
-  const formatTime = (minutes: number): string => {
+  const formatTime = useCallback((minutes: number): string => {
     if (minutes <= 0) return "0:00";
     const mins = Math.floor(minutes);
     const secs = Math.floor((minutes - mins) * 60);
     return `${mins}:${secs.toString().padStart(2, "0")}`;
-  };
+  }, []);
 
   // Calculate progress percentage (0-100)
   const progress = status === 'active' 
@@ -114,16 +118,16 @@ export function CountdownTimer({
   const strokeDashoffset = circumference - (progress / 100) * circumference;
 
   // Color based on status and time remaining
-  const getColor = () => {
+  const getColor = useCallback(() => {
     if (status === 'ready') return '#10b981'; // green
     if (status === 'canceled') return '#ef4444'; // red
     if (status === 'expired') return '#6b7280'; // gray
     if (isExpired) return '#f59e0b'; // orange
     if (timeRemaining <= 2) return '#f59e0b'; // orange when < 2 min
     return '#3b82f6'; // blue
-  };
+  }, [status, isExpired, timeRemaining]);
 
-  const getStatusText = () => {
+  const getStatusText = useCallback(() => {
     if (status === 'ready') return 'Ready!';
     if (status === 'canceled') return 'Canceled';
     if (status === 'expired') return 'Expired';
@@ -131,7 +135,7 @@ export function CountdownTimer({
     if (status === 'active' && !showTimers) return 'Preparing...';
     if (isExpired) return 'Overdue';
     return formatTime(timeRemaining);
-  };
+  }, [status, showTimers, isExpired, timeRemaining, formatTime]);
 
   const color = getColor();
 
@@ -186,4 +190,9 @@ export function CountdownTimer({
       )}
     </div>
   );
-}
+});
+
+// Custom comparison function for React.memo to optimize re-renders
+CountdownTimer.displayName = 'CountdownTimer';
+
+export { CountdownTimer };
