@@ -17,7 +17,8 @@
     "noFallthroughCasesInSwitch": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "fresh-design-system": ["../fresh-design-system-xxx/index.ts"]
     }
   },
   "include": ["src"]

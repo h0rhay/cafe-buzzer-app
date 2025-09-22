@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { supabase } from "../lib/supabase";
 import { LoadingSpinner } from "../components/LoadingSpinner";
+import { FreshButton } from "../components/FreshButton";
 
 export function EmailVerification() {
   const [status, setStatus] = useState<'verifying' | 'success' | 'error'>('verifying');

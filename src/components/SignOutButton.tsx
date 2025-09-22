@@ -1,6 +1,7 @@
 "use client";
 import { signOut } from "../lib/auth";
 import { toast } from "sonner";
+import { FreshButton } from "./FreshButton";
 
 export function SignOutButton() {
   const handleSignOut = async () => {
@@ -13,11 +14,12 @@ export function SignOutButton() {
   };
 
   return (
-    <button
-      className="px-4 py-2 rounded bg-white text-gray-700 border border-gray-200 font-semibold hover:bg-gray-50 hover:text-gray-800 transition-colors shadow-sm hover:shadow"
+    <FreshButton
+      variant="secondary"
+      size="md"
       onClick={handleSignOut}
     >
       Sign out
-    </button>
+    </FreshButton>
   );
 }

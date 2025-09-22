@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { toast } from "sonner";
 import { supabase } from "../lib/supabase";
+import { FreshButton } from "./FreshButton";
 
 interface BusinessRegistrationProps {
   onSuccess: () => void;
@@ -143,24 +144,30 @@ export function BusinessRegistration({ onSuccess, onSignInClick }: BusinessRegis
             />
           </div>
 
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isLoading ? 'Creating Account...' : 'Create Account'}
-          </button>
+          <div className="w-full">
+            <FreshButton
+              variant="primary"
+              size="lg"
+              onClick={() => handleSubmit({} as React.FormEvent)}
+              disabled={isLoading}
+              className="w-full"
+            >
+              {isLoading ? 'Creating Account...' : 'Create Account'}
+            </FreshButton>
+          </div>
         </form>
 
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">
             Already have an account?{' '}
-            <button
+            <FreshButton
+              variant="tertiary"
+              size="sm"
               onClick={onSignInClick}
-              className="text-blue-600 hover:text-blue-700 font-medium"
+              className="p-0 h-auto"
             >
               Sign In
-            </button>
+            </FreshButton>
           </p>
         </div>
 

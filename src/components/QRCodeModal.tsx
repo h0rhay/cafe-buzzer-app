@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import QRCode from "qrcode";
+import { FreshButton } from "./FreshButton";
 
 interface Props {
   token: string;
@@ -89,20 +90,24 @@ export function QRCodeModal({ token, businessSlug, onClose }: Props) {
           </div>
           
           <div className="flex gap-2">
-            <button
+            <FreshButton
+              variant="secondary"
+              size="md"
               onClick={() => {
                 navigator.clipboard.writeText(url);
               }}
-              className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors text-sm"
+              className="flex-1"
             >
               Copy Link
-            </button>
-            <button
+            </FreshButton>
+            <FreshButton
+              variant="primary"
+              size="md"
               onClick={onClose}
-              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors text-sm"
+              className="flex-1"
             >
               Close
-            </button>
+            </FreshButton>
           </div>
         </div>
       </div>

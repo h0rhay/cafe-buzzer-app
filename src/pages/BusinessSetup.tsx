@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { createBusiness, getUserBusiness, type Business } from "../lib/api/businesses";
 import { toast } from "sonner";
+import { FreshButton } from "../components/FreshButton";
 
 interface BusinessSetupProps {
   onBusinessCreated: (business: Business) => void;
@@ -54,12 +55,12 @@ export function BusinessSetup({ onBusinessCreated }: BusinessSetupProps) {
 
   return (
     <div className="max-w-md mx-auto mt-8">
-      <div className="bg-white rounded-lg shadow-sm p-6">
-        <h2 className="text-2xl font-bold mb-6 text-center">Set Up Your Business</h2>
-        
+      <div className="relative overflow-hidden transition-all duration-200 bg-white border-t-2 border-l-2 border-b-4 border-r-4 border-gray-300 hover:border-gray-400 hover:shadow-md p-6" style={{backgroundColor: 'var(--fresh-surface)', borderRadius: 'var(--fresh-radius-xl)'}}>
+        <h2 className="text-2xl fresh-text-brand mb-6 text-center" style={{color: 'var(--fresh-text-primary)'}}>Set Up Your Business</h2>
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="name" className="block text-sm font-medium uppercase tracking-wide mb-1" style={{color: 'var(--fresh-text-primary)'}}>
               Business Name
             </label>
             <input
@@ -67,18 +68,29 @@ export function BusinessSetup({ onBusinessCreated }: BusinessSetupProps) {
               id="name"
               value={name}
               onChange={(e) => handleNameChange(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 transition-all"
+              style={{
+                borderColor: 'var(--fresh-border)',
+                backgroundColor: 'var(--fresh-surface)',
+                color: 'var(--fresh-text-primary)',
+                borderRadius: 'var(--fresh-radius)'
+              }}
               placeholder="Your Cafe Name"
               required
             />
           </div>
 
           <div>
-            <label htmlFor="slug" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="slug" className="block text-sm font-medium uppercase tracking-wide mb-1" style={{color: 'var(--fresh-text-primary)'}}>
               Business URL
             </label>
             <div className="flex">
-              <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
+              <span className="inline-flex items-center px-3 border border-r-0 text-sm" style={{
+                borderColor: 'var(--fresh-border)',
+                backgroundColor: 'var(--fresh-surface-muted)',
+                color: 'var(--fresh-text-secondary)',
+                borderRadius: 'var(--fresh-radius) 0 0 var(--fresh-radius)'
+              }}>
                 https://
               </span>
               <input
@@ -88,20 +100,30 @@ export function BusinessSetup({ onBusinessCreated }: BusinessSetupProps) {
                 onChange={(e) => setSlug(e.target.value)}
                 placeholder="your-cafe-name"
                 pattern="[a-z0-9-]+"
-                className="flex-1 px-3 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="flex-1 px-3 py-2 border focus:outline-none focus:ring-2 transition-all"
+                style={{
+                  borderColor: 'var(--fresh-border)',
+                  backgroundColor: 'var(--fresh-surface)',
+                  color: 'var(--fresh-text-primary)'
+                }}
                 required
               />
-              <span className="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
+              <span className="inline-flex items-center px-3 border border-l-0 text-sm" style={{
+                borderColor: 'var(--fresh-border)',
+                backgroundColor: 'var(--fresh-surface-muted)',
+                color: 'var(--fresh-text-secondary)',
+                borderRadius: '0 var(--fresh-radius) var(--fresh-radius) 0'
+              }}>
                 .cafebuzzer.com
               </span>
             </div>
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs mt-1" style={{color: 'var(--fresh-text-muted)'}}>
               This will be your business URL. Only lowercase letters, numbers, and hyphens allowed.
             </p>
           </div>
           
           <div>
-            <label htmlFor="defaultEta" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="defaultEta" className="block text-sm font-medium uppercase tracking-wide mb-1" style={{color: 'var(--fresh-text-primary)'}}>
               Default Wait Time (minutes)
             </label>
             <input
@@ -109,20 +131,27 @@ export function BusinessSetup({ onBusinessCreated }: BusinessSetupProps) {
               id="defaultEta"
               value={defaultEta}
               onChange={(e) => setDefaultEta(parseInt(e.target.value) || 15)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 transition-all"
+              style={{
+                borderColor: 'var(--fresh-border)',
+                backgroundColor: 'var(--fresh-surface)',
+                color: 'var(--fresh-text-primary)',
+                borderRadius: 'var(--fresh-radius)'
+              }}
               min="1"
               max="120"
               required
             />
           </div>
           
-          <button
-            type="submit"
+          <FreshButton
+            variant="primary"
             disabled={isLoading || !name.trim()}
-            className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            onClick={() => handleSubmit(new Event('submit') as any)}
+            className="w-full"
           >
             {isLoading ? "Creating..." : "Create Business"}
-          </button>
+          </FreshButton>
         </form>
       </div>
     </div>

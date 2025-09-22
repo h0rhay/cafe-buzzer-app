@@ -1,109 +1,119 @@
 import { Link } from "react-router-dom";
+import { FreshButton } from "../components/FreshButton";
 
 export function LandingPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen" style={{background: `linear-gradient(135deg, var(--fresh-surface-muted), var(--fresh-selection-bg))`}}>
       <div className="container mx-auto px-4 py-16">
         <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold text-gray-900 mb-6">
+          <h1 className="text-5xl font-bold mb-6 fresh-text-brand" style={{color: 'var(--fresh-text-primary)'}}>
             Smart Buzzer System for Cafes
           </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            QR code-based order notifications that work on any smartphone. 
+          <p className="text-xl mb-8 max-w-2xl mx-auto" style={{color: 'var(--fresh-text-secondary)'}}>
+            QR code-based order notifications that work on any smartphone.
             No hardware needed.
           </p>
-          <div className="flex gap-4 justify-center">
-            <Link
-              to="/app"
-              className="inline-block bg-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors shadow-sm"
+          <div className="flex gap-4 justify-center flex-wrap">
+            <FreshButton
+              variant="primary"
+              size="lg"
+              onClick={() => window.location.href = '/app'}
             >
               Sign Up
-            </Link>
-            <Link
-              to="/demo"
-              className="inline-block bg-white text-gray-700 border-2 border-gray-300 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-50 transition-colors"
+            </FreshButton>
+            <FreshButton
+              variant="secondary"
+              size="lg"
+              onClick={() => window.location.href = '/demo'}
             >
               Try Demo
-            </Link>
+            </FreshButton>
           </div>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8 mb-16">
-          <div className="bg-white p-8 rounded-lg shadow-sm">
-            <div className="text-3xl mb-4">📱</div>
-            <h3 className="text-xl font-semibold mb-3">No Hardware Required</h3>
-            <p className="text-gray-600">
+          <div className="relative overflow-hidden transition-all duration-200 border-t-2 border-l-2 border-b-4 border-r-4 border-gray-300 hover:border-gray-400 hover:shadow-md p-8" style={{backgroundColor: 'var(--fresh-surface)', borderRadius: 'var(--fresh-radius-xl)'}}>
+            <div className="text-4xl mb-6 text-center">📱</div>
+            <h3 className="text-xl font-bold mb-4 fresh-text-brand text-center" style={{color: 'var(--fresh-primary)'}}>No Hardware Required</h3>
+            <p className="text-center" style={{color: 'var(--fresh-text-secondary)'}}>
               Works on any smartphone or tablet. No expensive pager systems to buy or maintain.
             </p>
           </div>
-          
-          <div className="bg-white p-8 rounded-lg shadow-sm">
-            <div className="text-3xl mb-4">⏱️</div>
-            <h3 className="text-xl font-semibold mb-3">Real-time Updates</h3>
-            <p className="text-gray-600">
+
+          <div className="relative overflow-hidden transition-all duration-200 border-t-2 border-l-2 border-b-4 border-r-4 border-gray-300 hover:border-gray-400 hover:shadow-md p-8" style={{backgroundColor: 'var(--fresh-surface)', borderRadius: 'var(--fresh-radius-xl)'}}>
+            <div className="text-4xl mb-6 text-center">⏱️</div>
+            <h3 className="text-xl font-bold mb-4 fresh-text-brand text-center" style={{color: 'var(--fresh-primary)'}}>Real-time Updates</h3>
+            <p className="text-center" style={{color: 'var(--fresh-text-secondary)'}}>
               Customers see live countdown timers and get instant notifications when orders are ready.
             </p>
           </div>
-          
-          <div className="bg-white p-8 rounded-lg shadow-sm">
-            <div className="text-3xl mb-4">📊</div>
-            <h3 className="text-xl font-semibold mb-3">Easy Management</h3>
-            <p className="text-gray-600">
+
+          <div className="relative overflow-hidden transition-all duration-200 border-t-2 border-l-2 border-b-4 border-r-4 border-gray-300 hover:border-gray-400 hover:shadow-md p-8" style={{backgroundColor: 'var(--fresh-surface)', borderRadius: 'var(--fresh-radius-xl)'}}>
+            <div className="text-4xl mb-6 text-center">📊</div>
+            <h3 className="text-xl font-bold mb-4 fresh-text-brand text-center" style={{color: 'var(--fresh-primary)'}}>Easy Management</h3>
+            <p className="text-center" style={{color: 'var(--fresh-text-secondary)'}}>
               Simple dashboard to manage all active orders, adjust timing, and track pickup history.
             </p>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-8 mb-16">
-          <h2 className="text-3xl font-bold text-center mb-8">How It Works</h2>
-          <div className="grid md:grid-cols-4 gap-6">
+        <div className="relative overflow-hidden transition-all duration-200 border-t-2 border-l-2 border-b-4 border-r-4 border-gray-300 hover:border-gray-400 hover:shadow-md p-8 mb-16" style={{backgroundColor: 'var(--fresh-surface)', borderRadius: 'var(--fresh-radius-xl)'}}>
+          <h2 className="text-3xl font-bold fresh-text-brand text-center mb-12" style={{color: 'var(--fresh-primary)'}}>How It Works</h2>
+          <div className="grid md:grid-cols-4 gap-8">
             <div className="text-center">
-              <div className="bg-blue-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-blue-600 font-bold">1</span>
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 border-t-2 border-l-2 border-b-4 border-r-4 border-black" style={{backgroundColor: 'var(--fresh-accent)'}}>
+                <span className="text-2xl font-bold fresh-text-brand" style={{color: 'var(--fresh-accent-foreground)'}}>1</span>
               </div>
-              <h4 className="font-semibold mb-2">Create Order</h4>
-              <p className="text-sm text-gray-600">Enter ticket number or select menu items</p>
+              <h4 className="font-bold mb-3 fresh-text-brand" style={{color: 'var(--fresh-text-primary)'}}>Create Order</h4>
+              <p className="text-sm" style={{color: 'var(--fresh-text-secondary)'}}>Enter ticket number or select menu items</p>
             </div>
             <div className="text-center">
-              <div className="bg-blue-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-blue-600 font-bold">2</span>
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 border-t-2 border-l-2 border-b-4 border-r-4 border-black" style={{backgroundColor: 'var(--fresh-accent)'}}>
+                <span className="text-2xl font-bold fresh-text-brand" style={{color: 'var(--fresh-accent-foreground)'}}>2</span>
               </div>
-              <h4 className="font-semibold mb-2">Show QR Code</h4>
-              <p className="text-sm text-gray-600">Customer scans QR code with their phone</p>
+              <h4 className="font-bold mb-3 fresh-text-brand" style={{color: 'var(--fresh-text-primary)'}}>Show QR Code</h4>
+              <p className="text-sm" style={{color: 'var(--fresh-text-secondary)'}}>Customer scans QR code with their phone</p>
             </div>
             <div className="text-center">
-              <div className="bg-blue-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-blue-600 font-bold">3</span>
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 border-t-2 border-l-2 border-b-4 border-r-4 border-black" style={{backgroundColor: 'var(--fresh-accent)'}}>
+                <span className="text-2xl font-bold fresh-text-brand" style={{color: 'var(--fresh-accent-foreground)'}}>3</span>
               </div>
-              <h4 className="font-semibold mb-2">Live Countdown</h4>
-              <p className="text-sm text-gray-600">Customer sees real-time countdown timer</p>
+              <h4 className="font-bold mb-3 fresh-text-brand" style={{color: 'var(--fresh-text-primary)'}}>Live Countdown</h4>
+              <p className="text-sm" style={{color: 'var(--fresh-text-secondary)'}}>Customer sees real-time countdown timer</p>
             </div>
             <div className="text-center">
-              <div className="bg-blue-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-blue-600 font-bold">4</span>
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 border-t-2 border-l-2 border-b-4 border-r-4 border-black" style={{backgroundColor: 'var(--fresh-accent)'}}>
+                <span className="text-2xl font-bold fresh-text-brand" style={{color: 'var(--fresh-accent-foreground)'}}>4</span>
               </div>
-              <h4 className="font-semibold mb-2">Get Notified</h4>
-              <p className="text-sm text-gray-600">Automatic notification when order is ready</p>
+              <h4 className="font-bold mb-3 fresh-text-brand" style={{color: 'var(--fresh-text-primary)'}}>Get Notified</h4>
+              <p className="text-sm" style={{color: 'var(--fresh-text-secondary)'}}>Automatic notification when order is ready</p>
             </div>
           </div>
         </div>
 
         <div className="text-center">
-          <h2 className="text-3xl font-bold mb-6">Ready to Get Started?</h2>
-          <div className="flex gap-4 justify-center">
-            <Link
-              to="/app"
-              className="inline-block bg-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors shadow-sm"
+          <h2 className="text-3xl font-bold fresh-text-brand mb-8" style={{color: 'var(--fresh-primary)'}}>
+            Ready to Get Started?
+          </h2>
+          <div className="flex gap-4 justify-center flex-wrap">
+            <FreshButton
+              variant="primary"
+              size="lg"
+              onClick={() => window.location.href = '/app'}
             >
-              Sign Up
-            </Link>
-            <Link
-              to="/demo"
-              className="inline-block bg-white text-gray-700 border-2 border-gray-300 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-50 transition-colors"
+              Get Started Now
+            </FreshButton>
+            <FreshButton
+              variant="accent"
+              size="lg"
+              onClick={() => window.location.href = '/demo'}
             >
-              Try Demo
-            </Link>
+              View Live Demo
+            </FreshButton>
           </div>
+          <p className="mt-6 text-sm" style={{color: 'var(--fresh-text-muted)'}}>
+            No credit card required • Set up in under 5 minutes
+          </p>
         </div>
       </div>
     </div>

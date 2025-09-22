@@ -16,6 +16,7 @@ import { DebugMenu } from "./components/DebugMenu";
 import { getCurrentUser, onAuthStateChange, type AuthUser } from "./lib/auth";
 import { getUserBusiness, getBusinessBySlug, type Business } from "./lib/api/businesses";
 import { useDebug } from "./hooks/useDebug";
+import { FreshButton } from "./components/FreshButton";
 
 export default function App() {
   const { isDebugMode } = useDebug();
@@ -31,7 +32,7 @@ export default function App() {
 
   return (
     <Router>
-      <div className="min-h-screen flex flex-col bg-gray-50">
+      <div className="min-h-screen flex flex-col" style={{backgroundColor: 'var(--fresh-surface-muted)'}}>
             <Routes>
               <Route path="/" element={<LandingPage />} />
               <Route path="/demo" element={<Dashboard />} />
@@ -77,15 +78,15 @@ function AuthenticatedApp() {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2" style={{borderColor: 'var(--fresh-primary)'}}></div>
       </div>
     );
   }
 
   return (
     <>
-      <header className="sticky top-0 z-10 bg-white/80 backdrop-blur-sm h-16 flex justify-between items-center border-b shadow-sm px-4">
-        <Link to="/app/dashboard" className="text-xl font-semibold text-blue-600 hover:text-blue-700">
+      <header className="sticky top-0 z-10 backdrop-blur-sm h-16 flex justify-between items-center border-b shadow-sm px-4" style={{backgroundColor: 'var(--fresh-surface)', borderColor: 'var(--fresh-border)'}}>
+        <Link to="/app/dashboard" className="text-xl fresh-text-brand hover:opacity-80 transition-opacity" style={{color: 'var(--fresh-primary)'}}>
           Cafe Buzzer
         </Link>
         <SignOutButton />
@@ -152,7 +153,7 @@ function AuthenticatedRoutes({}: AuthenticatedRoutesProps) {
   if (loading) {
     return (
       <div className="flex justify-center items-center py-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2" style={{borderColor: 'var(--fresh-primary)'}}></div>
       </div>
     );
   }
@@ -163,35 +164,40 @@ function AuthenticatedRoutes({}: AuthenticatedRoutesProps) {
 
   return (
     <div className="flex">
-      <nav className="w-64 bg-white rounded-lg shadow-sm p-4 mr-6 h-fit">
+      <nav className="w-64 rounded-lg shadow-sm p-4 mr-6 h-fit" style={{backgroundColor: 'var(--fresh-surface)', borderRadius: 'var(--fresh-radius-lg)'}}>
         <div className="space-y-2">
           <Link
             to="/app/settings"
-            className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
+            className="block px-3 py-2 rounded-lg font-medium uppercase tracking-wide text-sm transition-colors hover:opacity-80"
+            style={{color: 'var(--fresh-text-primary)', borderRadius: 'var(--fresh-radius)'}}
           >
             ⚙️ Settings
           </Link>
           <Link
             to="/app/security"
-            className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
+            className="block px-3 py-2 rounded-lg font-medium uppercase tracking-wide text-sm transition-colors hover:opacity-80"
+            style={{color: 'var(--fresh-text-primary)', borderRadius: 'var(--fresh-radius)'}}
           >
             🔒 Security
           </Link>
           <Link
             to="/app/account"
-            className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
+            className="block px-3 py-2 rounded-lg font-medium uppercase tracking-wide text-sm transition-colors hover:opacity-80"
+            style={{color: 'var(--fresh-text-primary)', borderRadius: 'var(--fresh-radius)'}}
           >
             👤 Account
           </Link>
           <Link
             to="/app/menu"
-            className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
+            className="block px-3 py-2 rounded-lg font-medium uppercase tracking-wide text-sm transition-colors hover:opacity-80"
+            style={{color: 'var(--fresh-text-primary)', borderRadius: 'var(--fresh-radius)'}}
           >
             🍽️ Menu Items
           </Link>
           <Link
             to="/app/timings"
-            className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
+            className="block px-3 py-2 rounded-lg font-medium uppercase tracking-wide text-sm transition-colors hover:opacity-80"
+            style={{color: 'var(--fresh-text-primary)', borderRadius: 'var(--fresh-radius)'}}
           >
             ⏱️ Timings and Buzzer Settings
           </Link>
@@ -249,7 +255,7 @@ function BusinessApp() {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2" style={{borderColor: 'var(--fresh-primary)'}}></div>
       </div>
     );
   }
@@ -260,21 +266,18 @@ function BusinessApp() {
 
   if (!business) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white rounded-lg shadow-sm border p-8 text-center">
+      <div className="min-h-screen flex items-center justify-center p-4" style={{backgroundColor: 'var(--fresh-surface-muted)'}}>
+        <div className="max-w-md w-full shadow-sm border p-8 text-center" style={{backgroundColor: 'var(--fresh-surface)', borderColor: 'var(--fresh-border)', borderRadius: 'var(--fresh-radius-lg)'}}>
           <div className="text-6xl mb-4">🏪</div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">
+          <h1 className="text-2xl font-bold mb-4 fresh-text-brand" style={{color: 'var(--fresh-text-primary)'}}>
             Business Not Found
           </h1>
-          <p className="text-gray-600 mb-6">
+          <p className="mb-6" style={{color: 'var(--fresh-text-secondary)'}}>
             The business "{businessSlug}" doesn't exist or you don't have access to it.
           </p>
-          <Link
-            to="/app"
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors"
-          >
+          <FreshButton variant="primary" onClick={() => window.location.href = '/app'}>
             Go to Dashboard
-          </Link>
+          </FreshButton>
         </div>
       </div>
     );
@@ -282,43 +285,48 @@ function BusinessApp() {
 
   return (
     <>
-      <header className="sticky top-0 z-10 bg-white/80 backdrop-blur-sm h-16 flex justify-between items-center border-b shadow-sm px-4">
-        <Link to={`/${businessSlug}/dashboard`} className="text-xl font-semibold text-blue-600 hover:text-blue-700">
+      <header className="sticky top-0 z-10 backdrop-blur-sm h-16 flex justify-between items-center border-b shadow-sm px-4" style={{backgroundColor: 'var(--fresh-surface)', borderColor: 'var(--fresh-border)'}}>
+        <Link to={`/${businessSlug}/dashboard`} className="text-xl fresh-text-brand hover:opacity-80 transition-opacity" style={{color: 'var(--fresh-primary)'}}>
           {business.name}
         </Link>
         <SignOutButton />
       </header>
       <main className="flex-1 p-4">
         <div className="flex">
-          <nav className="w-64 bg-white rounded-lg shadow-sm p-4 mr-6 h-fit">
+          <nav className="w-64 rounded-lg shadow-sm p-4 mr-6 h-fit" style={{backgroundColor: 'var(--fresh-surface)', borderRadius: 'var(--fresh-radius-lg)'}}>
             <div className="space-y-2">
               <Link
                 to={`/${businessSlug}/settings`}
-                className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
+                className="block px-3 py-2 rounded-lg font-medium uppercase tracking-wide text-sm transition-colors hover:opacity-80"
+                style={{color: 'var(--fresh-text-primary)', borderRadius: 'var(--fresh-radius)'}}
               >
                 ⚙️ Settings
               </Link>
               <Link
                 to={`/${businessSlug}/security`}
-                className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
+                className="block px-3 py-2 rounded-lg font-medium uppercase tracking-wide text-sm transition-colors hover:opacity-80"
+                style={{color: 'var(--fresh-text-primary)', borderRadius: 'var(--fresh-radius)'}}
               >
                 🔒 Security
               </Link>
               <Link
                 to={`/${businessSlug}/account`}
-                className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
+                className="block px-3 py-2 rounded-lg font-medium uppercase tracking-wide text-sm transition-colors hover:opacity-80"
+                style={{color: 'var(--fresh-text-primary)', borderRadius: 'var(--fresh-radius)'}}
               >
                 👤 Account
               </Link>
               <Link
                 to={`/${businessSlug}/menu`}
-                className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
+                className="block px-3 py-2 rounded-lg font-medium uppercase tracking-wide text-sm transition-colors hover:opacity-80"
+                style={{color: 'var(--fresh-text-primary)', borderRadius: 'var(--fresh-radius)'}}
               >
                 🍽️ Menu Items
               </Link>
               <Link
                 to={`/${businessSlug}/timings`}
-                className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
+                className="block px-3 py-2 rounded-lg font-medium uppercase tracking-wide text-sm transition-colors hover:opacity-80"
+                style={{color: 'var(--fresh-text-primary)', borderRadius: 'var(--fresh-radius)'}}
               >
                 ⏱️ Timings and Buzzer Settings
               </Link>

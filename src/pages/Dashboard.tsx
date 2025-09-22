@@ -7,6 +7,8 @@ import type { BuzzerWithMenuItems } from "../lib/api/buzzers";
 import { QRCodeModal } from "../components/QRCodeModal";
 import { CountdownTimer } from "../components/CountdownTimer";
 import type { Business } from "../lib/api/businesses";
+import { FreshButton } from "../components/FreshButton";
+import { FreshStatusBadge } from "../components/FreshStatusBadge";
 
 // Generate a random token for public access
 function generateToken(): string {
@@ -352,26 +354,27 @@ export function Dashboard({ business: propBusiness }: DashboardProps = {}) {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2" style={{borderColor: 'var(--fresh-primary)'}}></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen" style={{backgroundColor: 'var(--fresh-surface-muted)'}}>
       {/* Demo Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-4">
+      <div className="py-4" style={{background: `linear-gradient(to right, var(--fresh-primary), var(--fresh-primary-hover))`, color: 'white'}}>
         <div className="max-w-6xl mx-auto px-4 flex justify-between items-center">
           <div>
-            <h1 className="text-xl font-semibold">🎭 Live Demo - Demo Cafe Dashboard</h1>
-            <p className="text-blue-100 text-sm">This is a live demo showing real functionality</p>
+            <h1 className="text-xl fresh-text-brand">🎭 Live Demo - Demo Cafe Dashboard</h1>
+            <p className="text-sm opacity-80">This is a live demo showing real functionality</p>
           </div>
-          <Link
-            to="/"
-            className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-colors"
+          <FreshButton
+            variant="secondary"
+            size="sm"
+            onClick={() => window.location.href = '/'}
           >
             ← Back to Home
-          </Link>
+          </FreshButton>
         </div>
       </div>
 
@@ -379,20 +382,26 @@ export function Dashboard({ business: propBusiness }: DashboardProps = {}) {
       <div className="max-w-6xl mx-auto p-4">
         <div className="flex justify-between items-center mb-6 mt-6">
           <div>
-            <h2 className="text-3xl font-bold text-gray-900">{business?.name || 'Demo Cafe'}</h2>
-            <p className="text-gray-600">Active Buzzers Dashboard</p>
+            <h2 className="text-3xl fresh-text-brand" style={{color: 'var(--fresh-text-primary)'}}>{business?.name || 'Demo Cafe'}</h2>
+            <p style={{color: 'var(--fresh-text-secondary)'}}>Active Buzzers Dashboard</p>
           </div>
           <div className="flex items-center gap-6">
             {/* Default Wait Time Setting */}
             <div className="flex items-center gap-2 text-sm">
-              <label htmlFor="default-wait-time" className="text-gray-700">
+              <label htmlFor="default-wait-time" className="font-medium uppercase tracking-wide text-xs" style={{color: 'var(--fresh-text-primary)'}}>
                 Default wait time:
               </label>
               <select
                 id="default-wait-time"
                 value={business?.default_eta || 5}
                 onChange={(e) => void handleUpdateDefaultEta(e)}
-                className="px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="px-2 py-1 border text-sm focus:outline-none focus:ring-2 rounded"
+                style={{
+                  borderColor: 'var(--fresh-border)',
+                  backgroundColor: 'var(--fresh-surface)',
+                  color: 'var(--fresh-text-primary)',
+                  borderRadius: 'var(--fresh-radius)'
+                }}
               >
                 <option value={3}>3 minutes</option>
                 <option value={5}>5 minutes</option>
@@ -405,47 +414,50 @@ export function Dashboard({ business: propBusiness }: DashboardProps = {}) {
 
             {/* Show Timers Toggle */}
             <div className="flex items-center gap-2 text-sm">
-              <label htmlFor="show-timers" className="text-gray-700">
+              <label htmlFor="show-timers" className="font-medium uppercase tracking-wide text-xs" style={{color: 'var(--fresh-text-primary)'}}>
                 Show customer timers:
               </label>
               <button
                 id="show-timers"
                 onClick={() => void handleToggleShowTimers()}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                  business?.show_timers ? 'bg-blue-600' : 'bg-gray-300'
-                }`}
+                className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors"
+                style={{
+                  backgroundColor: business?.show_timers ? 'var(--fresh-primary)' : 'var(--fresh-border)',
+                  borderRadius: 'var(--fresh-radius-full)'
+                }}
               >
                 <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                  className={`inline-block h-4 w-4 transform rounded-full transition-transform ${
                     business?.show_timers ? 'translate-x-6' : 'translate-x-1'
                   }`}
+                  style={{backgroundColor: 'var(--fresh-surface)'}}
                 />
               </button>
-              <span className="text-xs text-gray-500">
+              <span className="text-xs font-bold uppercase" style={{color: 'var(--fresh-text-secondary)'}}>
                 {business?.show_timers ? 'ON' : 'OFF'}
               </span>
             </div>
             
-            <button
+            <FreshButton
+              variant="primary"
               onClick={() => void createNewBuzzer()}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
             >
               New Buzzer
-            </button>
+            </FreshButton>
           </div>
         </div>
 
         {buzzers.length === 0 ? (
           <div className="text-center py-12">
             <div className="text-6xl mb-4">📱</div>
-            <h3 className="text-xl font-semibold mb-2">No active buzzers</h3>
-            <p className="text-gray-600 mb-4">Demo data may be loading or expired</p>
-            <button
+            <h3 className="text-xl fresh-text-brand mb-2" style={{color: 'var(--fresh-text-primary)'}}>No active buzzers</h3>
+            <p className="mb-4" style={{color: 'var(--fresh-text-secondary)'}}>Demo data may be loading or expired</p>
+            <FreshButton
+              variant="primary"
               onClick={() => window.location.reload()}
-              className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
             >
               Refresh Demo
-            </button>
+            </FreshButton>
           </div>
         ) : (
           <div className="grid gap-4">
@@ -456,64 +468,68 @@ export function Dashboard({ business: propBusiness }: DashboardProps = {}) {
               return (
                 <div
                   key={buzzer.id}
-                  className={`bg-white rounded-lg shadow-sm p-6 border-l-4 ${
-                    buzzer.status === "ready"
-                      ? "border-green-500"
+                  className="relative overflow-hidden transition-all duration-200 bg-white border-t-2 border-l-2 border-b-4 border-r-4 hover:shadow-md p-6"
+                  style={{
+                    backgroundColor: 'var(--fresh-surface)',
+                    borderColor: buzzer.status === "ready"
+                      ? 'var(--fresh-success)'
                       : isOverdue
-                      ? "border-red-500"
-                      : "border-blue-500"
-                  }`}
+                      ? 'var(--fresh-error)'
+                      : 'gray',
+                    borderRadius: 'var(--fresh-radius-xl)'
+                  }}
                 >
-                  <div className="flex justify-between items-start">
+                  <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4">
                     <div className="flex-1">
-                      <div className="flex items-center gap-4 mb-2">
-                        <h3 className="text-lg font-semibold">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-2">
+                        <h3 className="text-lg font-bold uppercase tracking-wide" style={{color: 'var(--fresh-text-primary)'}}>
                           {buzzer.ticket && `#${buzzer.ticket}`}
                           {buzzer.customer_name && ` - ${buzzer.customer_name}`}
                           {!buzzer.ticket && !buzzer.customer_name && "Order"}
                         </h3>
-                        <span
-                          className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            buzzer.status === "ready"
-                              ? "bg-green-100 text-green-800"
-                              : isOverdue
-                              ? "bg-red-100 text-red-800"
-                              : "bg-blue-100 text-blue-800"
-                          }`}
+                        <FreshStatusBadge
+                          variant={buzzer.status === "ready"
+                            ? "success"
+                            : isOverdue
+                            ? "error"
+                            : "highlight"}
                         >
                           {buzzer.status === "ready"
                             ? "Ready"
                             : isOverdue
                             ? "Overdue"
                             : "Active"}
-                        </span>
+                        </FreshStatusBadge>
                       </div>
                       
-                      {buzzer.menuItems && buzzer.menuItems.length > 0 && (
-                        <div className="mb-2">
-                          <p className="text-sm text-gray-600">
-                            Items: {buzzer.menuItems.map((item: any) => item.name).join(", ")}
-                          </p>
+                      <div className="flex flex-col lg:flex-row lg:items-center lg:gap-6">
+                        {buzzer.menuItems && buzzer.menuItems.length > 0 && (
+                          <div className="mb-2 lg:mb-0">
+                            <p className="text-sm" style={{color: 'var(--fresh-text-secondary)'}}>
+                              Items: {buzzer.menuItems.map((item: any) => item.name).join(", ")}
+                            </p>
+                          </div>
+                        )}
+
+                        <div className="flex items-center gap-4 text-sm" style={{color: 'var(--fresh-text-secondary)'}}>
+                          <span>
+                            Started: {new Date(buzzer.started_at).toLocaleTimeString()}
+                          </span>
+                          <a
+                            href={`/b/${buzzer.public_token}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="underline font-medium uppercase tracking-wide hover:opacity-80 transition-opacity"
+                            style={{color: 'var(--fresh-primary)'}}
+                          >
+                            View Customer Page
+                          </a>
                         </div>
-                      )}
-                      
-                      <div className="flex items-center gap-4 text-sm text-gray-600">
-                        <span>
-                          Started: {new Date(buzzer.started_at).toLocaleTimeString()}
-                        </span>
-                        <a
-                          href={`/b/${buzzer.public_token}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-600 hover:text-blue-700 underline"
-                        >
-                          View Customer Page
-                        </a>
                       </div>
                     </div>
                     
                     {/* Countdown Timer */}
-                    <div className="flex items-center mr-4">
+                    <div className="flex items-center lg:mr-4 mb-4 lg:mb-0">
                       <CountdownTimer
                         startedAt={buzzer.started_at}
                         etaMinutes={buzzer.eta}
@@ -525,51 +541,57 @@ export function Dashboard({ business: propBusiness }: DashboardProps = {}) {
                         buzzerId={buzzer.id}
                       />
                     </div>
-                    
-                    <div className="flex items-center gap-2">
-                      <button
+
+                    <div className="flex flex-wrap gap-2">
+                      <FreshButton
+                        variant="outline"
+                        size="sm"
                         onClick={() => handleShowQR(buzzer)}
-                        className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors"
                       >
                         📱 QR Code
-                      </button>
+                      </FreshButton>
                       
                       {buzzer.status === "active" && (
                         <>
-                          <button
+                          <FreshButton
+                            variant="accent"
+                            size="sm"
                             onClick={() => void handleAdjustTime(buzzer, -5)}
-                            className="px-3 py-1 text-sm bg-orange-100 text-orange-700 rounded hover:bg-orange-200 transition-colors"
                           >
                             ⏰ -5 min
-                          </button>
-                          <button
+                          </FreshButton>
+                          <FreshButton
+                            variant="accent"
+                            size="sm"
                             onClick={() => void handleAdjustTime(buzzer, 5)}
-                            className="px-3 py-1 text-sm bg-orange-100 text-orange-700 rounded hover:bg-orange-200 transition-colors"
                           >
                             ⏰ +5 min
-                          </button>
-                          <button
+                          </FreshButton>
+                          <FreshButton
+                            variant="primary"
+                            size="sm"
                             onClick={() => void handleMarkReady(buzzer)}
-                            className="px-3 py-1 text-sm bg-green-100 text-green-700 rounded hover:bg-green-200 transition-colors"
                           >
                             ✅ Mark Ready
-                          </button>
-                          <button
+                          </FreshButton>
+                          <FreshButton
+                            variant="secondary"
+                            size="sm"
                             onClick={() => void handleCancel(buzzer)}
-                            className="px-3 py-1 text-sm bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors"
                           >
                             ❌ Cancel
-                          </button>
+                          </FreshButton>
                         </>
                       )}
                       
                       {buzzer.status === "ready" && (
-                        <button
+                        <FreshButton
+                          variant="outline"
+                          size="sm"
                           onClick={() => handleDemoAction('mark as picked up')}
-                          className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors"
                         >
                           Picked Up
-                        </button>
+                        </FreshButton>
                       )}
                     
                     </div>
@@ -581,24 +603,24 @@ export function Dashboard({ business: propBusiness }: DashboardProps = {}) {
         )}
 
         {/* Demo Info Panel */}
-        <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-blue-900 mb-3">🎭 Demo Features</h3>
+        <div className="mt-8 border rounded-lg p-6" style={{backgroundColor: 'var(--fresh-selection-bg)', borderColor: 'var(--fresh-selection-border)', borderRadius: 'var(--fresh-radius-lg)'}}>
+          <h3 className="text-lg fresh-text-brand mb-3" style={{color: 'var(--fresh-primary)'}}>🎭 Demo Features</h3>
           <div className="grid md:grid-cols-2 gap-4 text-sm">
             <div>
-              <h4 className="font-medium text-blue-800 mb-1">Live Data</h4>
-              <p className="text-blue-700">This dashboard shows real data from the database with live countdown timers.</p>
+              <h4 className="font-medium uppercase tracking-wide mb-1" style={{color: 'var(--fresh-primary)'}}>Live Data</h4>
+              <p style={{color: 'var(--fresh-text-primary)'}}>This dashboard shows real data from the database with live countdown timers.</p>
             </div>
             <div>
-              <h4 className="font-medium text-blue-800 mb-1">Interactive Buttons</h4>
-              <p className="text-blue-700">Click any button to see demo feedback - in the real app these would update the database.</p>
+              <h4 className="font-medium uppercase tracking-wide mb-1" style={{color: 'var(--fresh-primary)'}}>Interactive Buttons</h4>
+              <p style={{color: 'var(--fresh-text-primary)'}}>Click any button to see demo feedback - in the real app these would update the database.</p>
             </div>
             <div>
-              <h4 className="font-medium text-blue-800 mb-1">Customer View</h4>
-              <p className="text-blue-700">Click "View Customer Page" links to see what customers see on their phones.</p>
+              <h4 className="font-medium uppercase tracking-wide mb-1" style={{color: 'var(--fresh-primary)'}}>Customer View</h4>
+              <p style={{color: 'var(--fresh-text-primary)'}}>Click "View Customer Page" links to see what customers see on their phones.</p>
             </div>
             <div>
-              <h4 className="font-medium text-blue-800 mb-1">Auto-Refresh</h4>
-              <p className="text-blue-700">The dashboard automatically refreshes every 10 seconds to show live updates.</p>
+              <h4 className="font-medium uppercase tracking-wide mb-1" style={{color: 'var(--fresh-primary)'}}>Auto-Refresh</h4>
+              <p style={{color: 'var(--fresh-text-primary)'}}>The dashboard automatically refreshes every 10 seconds to show live updates.</p>
             </div>
           </div>
         </div>

@@ -1,10 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* FRESH Design System CSS Variables */
 :root {
   --color-light: #ffffff;
   --color-dark: #171717;
+
+  /* Core Colors */
+  --fresh-primary: #2d7d78;
+  --fresh-primary-foreground: #ffffff;
+  --fresh-primary-hover: #1f5b57;
+
+  --fresh-accent: #f59e0b;
+  --fresh-accent-foreground: #1f2937;
+  --fresh-accent-hover: #d97706;
+
+  --fresh-secondary: #f9fafb;
+  --fresh-secondary-foreground: #374151;
+  --fresh-secondary-hover: #f3f4f6;
+
+  /* Status Colors */
+  --fresh-success: #10b981;
+  --fresh-success-foreground: #ffffff;
+
+  --fresh-warning: #f59e0b;
+  --fresh-warning-foreground: #1f2937;
+
+  --fresh-error: #ef4444;
+  --fresh-error-foreground: #ffffff;
+
+  /* Selection States */
+  --fresh-selection-bg: #fef3c7;
+  --fresh-selection-border: #f59e0b;
+  --fresh-selection-yellow: #fbbf24;
+
+  /* Borders and Surfaces */
+  --fresh-border: #e5e7eb;
+  --fresh-border-heavy: #374151;
+  --fresh-surface: #ffffff;
+  --fresh-surface-muted: #f9fafb;
+
+  /* Typography */
+  --fresh-text-primary: #1f2937;
+  --fresh-text-secondary: #6b7280;
+  --fresh-text-muted: #9ca3af;
+
+  /* Spacing and Sizing */
+  --fresh-radius: 0.75rem;
+  --fresh-radius-sm: 0.5rem;
+  --fresh-radius-lg: 1rem;
+  --fresh-radius-xl: 1.5rem;
+  --fresh-radius-full: 9999px;
+
+  /* Component-specific */
+  --fresh-button-border-thin: 2px;
+  --fresh-button-border-thick: 4px;
+  --fresh-card-padding: 1rem;
+  --fresh-input-padding: 1rem;
+
+  /* Interactive States */
+  --fresh-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --fresh-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --fresh-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --fresh-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
 }
 
 .accent-text {
@@ -32,6 +93,13 @@ body {
   background: var(--color-light);
 }
 
+/* Fresh typography with Rubik for display elements */
+h1, h2, h3, h4, h5, h6,
+.fresh-heading {
+  font-family: "Rubik", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+}
+
 /* only use this to update the style of the auth input fields. use a different class for all other input fields */
 .auth-input-field {
   @apply w-full px-4 py-3 rounded-container bg-white border border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow shadow-sm hover:shadow;
@@ -40,4 +108,43 @@ body {
 /* only use this to update the style of the auth buttons. use the button class for all other buttons */
 .auth-button {
   @apply w-full px-4 py-3 rounded bg-primary text-white font-semibold hover:bg-primary-hover transition-colors shadow-sm hover:shadow disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fresh-surface: #1f2937;
+    --fresh-surface-muted: #374151;
+    --fresh-text-primary: #ffffff;
+    --fresh-text-secondary: #d1d5db;
+    --fresh-text-muted: #9ca3af;
+    --fresh-border: #4b5563;
+  }
+}
+
+/* Utility classes for FRESH-specific styling */
+.fresh-border-asymmetric {
+  border-top: var(--fresh-button-border-thin) solid;
+  border-left: var(--fresh-button-border-thin) solid;
+  border-bottom: var(--fresh-button-border-thick) solid;
+  border-right: var(--fresh-button-border-thick) solid;
+}
+
+.fresh-border-asymmetric-active {
+  border-top: var(--fresh-button-border-thick) solid;
+  border-left: var(--fresh-button-border-thick) solid;
+  border-bottom: var(--fresh-button-border-thin) solid;
+  border-right: var(--fresh-button-border-thin) solid;
+}
+
+.fresh-text-brand {
+  font-family: "Rubik", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.fresh-selection-state {
+  background-color: var(--fresh-selection-bg);
+  border-color: var(--fresh-selection-border);
 }

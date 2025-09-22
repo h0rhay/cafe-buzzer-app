@@ -38,6 +38,7 @@ window.addEventListener('message', async (message) => {
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      "fresh-design-system": path.resolve(__dirname, "../fresh-design-system-xxx/index.ts"),
     },
   },
 }));
