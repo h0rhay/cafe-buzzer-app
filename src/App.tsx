@@ -166,16 +166,22 @@ function AuthenticatedRoutes({}: AuthenticatedRoutesProps) {
       <nav className="w-64 bg-white rounded-lg shadow-sm p-4 mr-6 h-fit">
         <div className="space-y-2">
           <Link
-            to="/app/dashboard"
+            to="/app/settings"
             className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
           >
-            📊 Dashboard
+            ⚙️ Settings
           </Link>
           <Link
-            to="/app/new"
+            to="/app/security"
             className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
           >
-            ➕ New Buzzer
+            🔒 Security
+          </Link>
+          <Link
+            to="/app/account"
+            className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
+          >
+            👤 Account
           </Link>
           <Link
             to="/app/menu"
@@ -184,10 +190,10 @@ function AuthenticatedRoutes({}: AuthenticatedRoutesProps) {
             🍽️ Menu Items
           </Link>
           <Link
-            to="/app/settings"
+            to="/app/timings"
             className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
           >
-            ⚙️ Settings
+            ⏱️ Timings and Buzzer Settings
           </Link>
         </div>
       </nav>
@@ -287,16 +293,22 @@ function BusinessApp() {
           <nav className="w-64 bg-white rounded-lg shadow-sm p-4 mr-6 h-fit">
             <div className="space-y-2">
               <Link
-                to={`/${businessSlug}/dashboard`}
+                to={`/${businessSlug}/settings`}
                 className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
               >
-                📊 Dashboard
+                ⚙️ Settings
               </Link>
               <Link
-                to={`/${businessSlug}/new`}
+                to={`/${businessSlug}/security`}
                 className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
               >
-                ➕ New Buzzer
+                🔒 Security
+              </Link>
+              <Link
+                to={`/${businessSlug}/account`}
+                className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
+              >
+                👤 Account
               </Link>
               <Link
                 to={`/${businessSlug}/menu`}
@@ -305,10 +317,10 @@ function BusinessApp() {
                 🍽️ Menu Items
               </Link>
               <Link
-                to={`/${businessSlug}/settings`}
+                to={`/${businessSlug}/timings`}
                 className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
               >
-                ⚙️ Settings
+                ⏱️ Timings and Buzzer Settings
               </Link>
             </div>
           </nav>
