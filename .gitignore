@@ -52,3 +52,6 @@ coverage/
 
 # Reset script (contains sensitive info)
 reset-database.sql
+
+# Planning and exploration docs (noise)
+docs/

@@ -5,7 +5,6 @@ import { SignOutButton } from "./components/SignOutButton";
 import { Toaster } from "sonner";
 import { BrowserRouter as Router, Routes, Route, Navigate, Link, useParams } from "react-router-dom";
 import { Dashboard } from "./pages/Dashboard";
-import { NewBuzzer } from "./pages/NewBuzzer";
 import { BuzzerPage } from "./pages/BuzzerPage";
 import { BusinessSetup } from "./pages/BusinessSetup";
 import { LandingPage } from "./pages/LandingPage";
@@ -172,12 +171,6 @@ function AuthenticatedRoutes({}: AuthenticatedRoutesProps) {
             📊 Dashboard
           </Link>
           <Link
-            to="/app/new"
-            className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
-          >
-            ➕ New Buzzer
-          </Link>
-          <Link
             to="/app/menu"
             className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
           >
@@ -195,7 +188,6 @@ function AuthenticatedRoutes({}: AuthenticatedRoutesProps) {
       <div className="flex-1">
         <Routes>
           <Route path="/dashboard" element={<Dashboard business={business} />} />
-          <Route path="/new" element={<NewBuzzer business={business} />} />
           <Route path="/menu" element={<MenuManagement business={business} />} />
           <Route path="/settings" element={<Settings business={business} />} />
           <Route path="/" element={<Navigate to="/app/dashboard" replace />} />
@@ -293,12 +285,6 @@ function BusinessApp() {
                 📊 Dashboard
               </Link>
               <Link
-                to={`/${businessSlug}/new`}
-                className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
-              >
-                ➕ New Buzzer
-              </Link>
-              <Link
                 to={`/${businessSlug}/menu`}
                 className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
               >
@@ -316,7 +302,6 @@ function BusinessApp() {
           <div className="flex-1">
             <Routes>
               <Route path="/dashboard" element={<Dashboard business={business} />} />
-              <Route path="/new" element={<NewBuzzer business={business} />} />
               <Route path="/menu" element={<MenuManagement business={business} />} />
               <Route path="/settings" element={<Settings business={business} />} />
               <Route path="/" element={<Navigate to={`/${businessSlug}/dashboard`} replace />} />

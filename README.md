@@ -1,29 +1,80 @@
 # Cafe Buzzer App
-  
-This is a project built with [Chef](https://chef.convex.dev) using [Convex](https://convex.dev) as its backend.
- You can find docs about Chef with useful information like how to deploy to production [here](https://docs.convex.dev/chef).
-  
-This project is connected to the Convex deployment named [`benevolent-clownfish-513`](https://dashboard.convex.dev/d/benevolent-clownfish-513).
-  
-## Project structure
-  
-The frontend code is in the `app` directory and is built with [Vite](https://vitejs.dev/).
-  
-The backend code is in the `convex` directory.
-  
-`npm run dev` will start the frontend and backend servers.
 
-## App authentication
+A modern restaurant order management and customer notification system built with React, TypeScript, and Supabase.
 
-Chef apps use [Convex Auth](https://auth.convex.dev/) with Anonymous auth for easy sign in. You may wish to change this before deploying your app.
+## Quick Start
 
-## Developing and deploying your app
+```bash
+npm install
+npm run dev  # Starts both frontend and backend
+```
 
-Check out the [Convex docs](https://docs.convex.dev/) for more information on how to develop with Convex.
-* If you're new to Convex, the [Overview](https://docs.convex.dev/understanding/) is a good place to start
-* Check out the [Hosting and Deployment](https://docs.convex.dev/production/) docs for how to deploy your app
-* Read the [Best Practices](https://docs.convex.dev/understanding/best-practices/) guide for tips on how to improve you app further
+Visit `http://localhost:5173` to view the app.
 
-## HTTP API
+## Project Overview
 
-User-defined http routes are defined in the `convex/router.ts` file. We split these routes into a separate file from `convex/http.ts` to allow us to prevent the LLM from modifying the authentication routes.
+The Cafe Buzzer App allows restaurants to:
+- Create and manage customer orders with QR code buzzers
+- Track order status in real-time (active → ready → picked up)
+- Manage menu items with estimated preparation times
+- Provide customers with a public status page via unique tokens
+
+## Tech Stack
+
+- **Frontend**: React 19 + TypeScript + Vite + Tailwind CSS
+- **Backend**: Supabase (PostgreSQL, Auth, Realtime)
+- **Authentication**: Supabase Anonymous Auth
+- **UI Components**: Custom components with Tailwind styling
+- **Notifications**: Sonner toast notifications
+- **QR Codes**: qrcode library
+
+## Project Structure
+
+```
+src/
+├── components/     # Reusable UI components
+├── layouts/        # Layout wrappers (AuthenticatedLayout)
+├── pages/          # Route pages (Dashboard, BuzzerPage, etc.)
+├── hooks/          # Custom React hooks
+└── lib/
+    ├── api/        # Supabase API functions
+    └── types/      # TypeScript type definitions
+
+supabase/
+└── migrations/     # Database schema and RLS policies
+```
+
+## Development Commands
+
+- `npm run dev` - Start frontend (Vite) and backend (Supabase) in parallel
+- `npm run dev:frontend` - Start only frontend development server
+- `npm run dev:backend` - Start only Supabase local server
+- `npm run build` - Build for production
+- `npm run lint` - TypeScript compilation check
+- `supabase start` - Start Supabase services
+- `supabase status` - View connection details
+- `supabase stop` - Stop Supabase services
+
+## Authentication
+
+The app uses Supabase Anonymous Authentication for easy onboarding. Users can sign in without credentials and are prompted to create or join a business on first access.
+
+## Database Schema
+
+Core tables:
+- **businesses** - Restaurant/cafe information
+- **staff** - User-to-business relationships with roles
+- **menu_items** - Menu items with prep times
+- **buzzers** - Orders with public tokens and status tracking
+
+All tables use Row Level Security (RLS) for secure data access.
+
+## Documentation
+
+For detailed information, see:
+- [CLAUDE.md](CLAUDE.md) - Comprehensive development guide for AI assistance
+- [docs/](docs/) - Additional architecture and deployment documentation
+
+## Deployment
+
+See [docs/deployment.md](docs/deployment.md) for production deployment instructions.
