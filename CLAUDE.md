@@ -81,7 +81,7 @@ The app uses four main tables (5 migrations applied):
 - **businesses**: Restaurant/cafe information with owner_id, name, slug (for subdomain routing), default_eta, and show_timers boolean
 - **staff**: Links users to businesses with roles (owner/staff)
 - **menu_items**: Menu items with estimated preparation times per business
-- **buzzers**: Order tracking with public tokens, customer info, timing, and status flow (active/ready/picked_up/canceled/expired)
+- **buzzers**: Order tracking with public tokens, customer info, timing, and status flow (active/ready/picked_up/cancelled/expired)
 
 ### Row Level Security (RLS)
 All tables have RLS enabled with comprehensive security policies:
@@ -138,7 +138,7 @@ All tables have RLS enabled with comprehensive security policies:
 - Anonymous auth enabled for easy user onboarding
 
 ### Status Management
-Buzzers progress through states: `active` → `ready` → `picked_up` (or `canceled`/`expired`)
+Buzzers progress through states: `active` → `ready` → `picked_up` (or `cancelled`/`expired`)
 
 ### Development Notes
 - Uses TypeScript with strict mode enabled

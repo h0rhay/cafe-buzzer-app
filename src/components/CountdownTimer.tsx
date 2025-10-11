@@ -113,9 +113,6 @@ const CountdownTimer = memo(function CountdownTimer({
 
   const config = sizeConfig[size];
   const radius = (config.diameter - config.strokeWidth) / 2;
-  const circumference = radius * 2 * Math.PI;
-  const strokeDasharray = circumference;
-  const strokeDashoffset = circumference - (progress / 100) * circumference;
 
   // Color based on status and time remaining
   const getColor = useCallback(() => {
@@ -139,47 +136,56 @@ const CountdownTimer = memo(function CountdownTimer({
 
   const color = getColor();
 
+  // LED configuration - number of LEDs around the circle
+  const numLEDs = 12;
+  const ledRadius = radius + 5; // Slightly outside the circle
+  const rotationSpeed = 12; // seconds for full rotation (1 second per LED)
+
   return (
     <div className={`relative ${config.containerSize} flex items-center justify-center`}>
-      {/* SVG Pie Chart */}
-      <svg 
-        width={config.diameter} 
-        height={config.diameter} 
+      {/* SVG Container */}
+      <svg
+        width={config.diameter}
+        height={config.diameter}
         className="transform -rotate-90"
+        style={{overflow: 'visible'}}
       >
-        {/* Background circle */}
-        <circle
-          cx={config.diameter / 2}
-          cy={config.diameter / 2}
-          r={radius}
-          stroke="#e5e7eb"
-          strokeWidth={config.strokeWidth}
-          fill="transparent"
-        />
-        
-        {/* Progress circle */}
-        <circle
-          cx={config.diameter / 2}
-          cy={config.diameter / 2}
-          r={radius}
-          stroke={color}
-          strokeWidth={config.strokeWidth}
-          fill="transparent"
-          strokeDasharray={strokeDasharray}
-          strokeDashoffset={strokeDashoffset}
-          strokeLinecap="round"
-          className="transition-all duration-1000 ease-in-out"
-        />
+        {/* LED Lights - One red dot chasing around the circle */}
+        {status === 'active' && Array.from({ length: numLEDs }).map((_, i) => {
+          const angle = (i / numLEDs) * 2 * Math.PI;
+          const x = config.diameter / 2 + ledRadius * Math.cos(angle);
+          const y = config.diameter / 2 + ledRadius * Math.sin(angle);
+
+          // Each LED blinks on for a brief moment in sequence
+          const animationDelay = (i / numLEDs) * rotationSpeed;
+
+          return (
+            <circle
+              key={i}
+              cx={x}
+              cy={y}
+              r={5}
+              fill="transparent"
+              stroke="#d1d5db"
+              strokeWidth={2}
+              className="led-blink"
+              style={{
+                animationDelay: `${animationDelay}s`,
+                animationDuration: `${rotationSpeed}s`
+              }}
+            />
+          );
+        })}
       </svg>
 
       {/* Center text */}
       {showText && (
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <div 
+          <div
             className={`font-bold ${config.numberSize} font-mono`}
             style={{ color }}
           >
-            {status === 'active' && showTimers ? formatTime(timeRemaining) : getStatusText()}
+            {getStatusText()}
           </div>
           {status === 'active' && showTimers && (
             <div className={`${config.textSize} text-gray-500 mt-1`}>
@@ -188,6 +194,43 @@ const CountdownTimer = memo(function CountdownTimer({
           )}
         </div>
       )}
+
+      {/* LED blink animation - analog on/off like a physical buzzer */}
+      <style>{`
+        @keyframes led-blink {
+          0% {
+            fill: transparent;
+            stroke: #d1d5db;
+            stroke-width: 2;
+            opacity: 1;
+            filter: none;
+          }
+          8% {
+            fill: #ef4444;
+            stroke: #ef4444;
+            stroke-width: 0;
+            opacity: 1;
+            filter: drop-shadow(0 0 6px #ef4444) drop-shadow(0 0 12px #ef4444);
+          }
+          16% {
+            fill: transparent;
+            stroke: #d1d5db;
+            stroke-width: 2;
+            opacity: 1;
+            filter: none;
+          }
+          100% {
+            fill: transparent;
+            stroke: #d1d5db;
+            stroke-width: 2;
+            opacity: 1;
+            filter: none;
+          }
+        }
+        .led-blink {
+          animation: led-blink linear infinite;
+        }
+      `}</style>
     </div>
   );
 });

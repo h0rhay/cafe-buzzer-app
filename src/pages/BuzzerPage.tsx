@@ -73,11 +73,11 @@ export function BuzzerPage() {
     const config = STATUS_CONFIG[buzzer.status] || STATUS_CONFIG.active;
 
     const statusTexts: Record<BuzzerStatus, string> = {
-      ready: "Ready for Pickup!",
-      active: "Being Prepared",
-      picked_up: "Picked Up",
-      canceled: "Canceled",
-      expired: "Expired"
+      ready: "Order Ready!",
+      active: "Preparing order",
+      picked_up: "Order Collected",
+      canceled: "Order Canceled",
+      expired: "Order Expired"
     };
 
     return {
@@ -118,54 +118,51 @@ export function BuzzerPage() {
     );
   }
 
+  // Get header background color based on status
+  const getHeaderColor = () => {
+    if (buzzer.status === 'canceled') return 'var(--fresh-error)';
+    if (buzzer.status === 'ready') return 'var(--fresh-success)';
+    return 'var(--fresh-primary)';
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center p-4" style={{backgroundColor: 'var(--fresh-surface-muted)'}}>
-      <div className="max-w-md w-full shadow-lg border overflow-hidden" style={{backgroundColor: 'var(--fresh-surface)', borderColor: 'var(--fresh-border)', borderRadius: 'var(--fresh-radius-lg)'}}>
-        {/* Status Header */}
-        <div className="p-6 text-center" style={{backgroundColor: 'var(--fresh-primary)', color: 'white'}}>
-          <div className="text-6xl mb-2">{statusInfo.icon}</div>
-          <h1 className="text-2xl fresh-text-brand mb-1">
+    <div className="min-h-screen flex items-center justify-center p-4" style={{background: `linear-gradient(135deg, var(--fresh-surface-muted), var(--fresh-selection-bg))`}}>
+      <div className="max-w-md w-full shadow-lg border-t-2 border-l-2 border-b-4 border-r-4 border-black overflow-hidden" style={{backgroundColor: 'var(--fresh-surface)', borderRadius: 'var(--fresh-radius-xl)'}}>
+        {/* Clean Header - Just Status and Ticket */}
+        <div className="p-8 text-center" style={{backgroundColor: getHeaderColor(), color: 'white'}}>
+          <p className="text-sm font-medium uppercase tracking-wide mb-2 opacity-90">
             {statusInfo.text}
-          </h1>
-          {buzzer.businessName && (
-            <p className="opacity-80">
-              {buzzer.businessName}
-            </p>
+          </p>
+          {buzzer.ticket && (
+            <h1 className="text-6xl font-bold fresh-text-brand">
+              #{buzzer.ticket}
+            </h1>
           )}
-          <div className="mt-3 flex justify-center">
-            <FreshStatusBadge variant={statusInfo.variant}>
-              {statusInfo.text}
-            </FreshStatusBadge>
-          </div>
         </div>
+
+        {/* Divider */}
+        <div className="border-t-2" style={{borderColor: 'var(--fresh-border)'}} />
 
         {/* Order Details */}
         <div className="p-6">
-          {/* Customer & Ticket Info */}
-          {(buzzer.customer_name || buzzer.ticket) && (
+          {/* Customer Name if exists */}
+          {buzzer.customer_name && (
             <div className="mb-4 pb-4 border-b" style={{borderColor: 'var(--fresh-border)'}}>
-              {buzzer.ticket && (
-                <p className="text-lg font-bold uppercase tracking-wide" style={{color: 'var(--fresh-text-primary)'}}>
-                  Order #{buzzer.ticket}
-                </p>
-              )}
-              {buzzer.customer_name && (
-                <p style={{color: 'var(--fresh-text-secondary)'}}>
-                  {buzzer.customer_name}
-                </p>
-              )}
+              <p className="text-xl font-bold fresh-text-brand text-center" style={{color: 'var(--fresh-text-primary)'}}>
+                {buzzer.customer_name}
+              </p>
             </div>
           )}
 
           {/* Countdown Timer */}
-          <div className="flex flex-col items-center mb-6">
+          <div className="flex flex-col items-center mb-6" style={{padding: '20px'}}>
             <CountdownTimer
               startedAt={buzzer.started_at}
               etaMinutes={buzzer.eta}
               status={buzzer.status}
               size="large"
               showText={true}
-              showTimers={buzzer.showTimers || false} // Use buzzer's showTimers property from business
+              showTimers={buzzer.showTimers || false}
             />
           </div>
 

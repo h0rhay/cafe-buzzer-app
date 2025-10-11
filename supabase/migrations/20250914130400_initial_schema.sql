@@ -4,7 +4,7 @@ create extension if not exists "uuid-ossp";
 
 -- Create custom types
 create type user_role as enum ('owner', 'staff');
-create type buzzer_status as enum ('active', 'ready', 'picked_up', 'canceled', 'expired');
+create type buzzer_status as enum ('active', 'ready', 'picked_up', 'cancelled', 'expired');
 
 -- Businesses table
 create table businesses (

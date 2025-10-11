@@ -299,9 +299,9 @@ export function Dashboard({ business: propBusiness }: DashboardProps = {}) {
         throw error;
       }
       
-      debugLog('Successfully cancelled buzzer');
+      debugLog('Successfully canceled buzzer');
       void fetchDemoBuzzers();
-      toast.success(`Order ${buzzer.ticket} cancelled`);
+      toast.success(`Order ${buzzer.ticket} canceled`);
     } catch (error) {
       debugError('Failed to cancel buzzer:', error);
       console.error('Cancel error:', error);
